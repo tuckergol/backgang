@@ -18,6 +18,8 @@ from api.titanic import titanic_api
 from api.food import food_api
 from api.stock import stocks_api
 from api.bakery import bakery_api
+from api.house_price import house_price_api
+
 # database migrations
 from model.users import initUsers
 from model.players import initPlayers
@@ -41,6 +43,7 @@ app.register_blueprint(titanic_api)
 app.register_blueprint(food_api)
 app.register_blueprint(stocks_api)
 app.register_blueprint(bakery_api)
+app.register_blueprint(house_price_api)
 
 @app.errorhandler(404)  # catch for URL not found
 def page_not_found(e):
