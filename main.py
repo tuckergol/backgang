@@ -7,6 +7,8 @@ from api.player import player_api
 from api.titanic import titanic_api
 from api.food import food_api
 from api.bakery import bakery_api
+from api.stock import stocks_api
+from api.house_price import house_price_api
 # database migrations
 from model.users import initUsers
 from model.players import initPlayers
