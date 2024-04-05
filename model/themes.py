@@ -1,15 +1,14 @@
 """ database dependencies to support sqliteDB examples """
-import json
 from random import randrange
 from datetime import date
-import os
-import base64
+import os, base64
+import json
 from __init__ import app, db
 from sqlalchemy.exc import IntegrityError
 from werkzeug.security import generate_password_hash, check_password_hash
-
+''' Tutorial: https://www.sqlalchemy.org/library.html#tutorials, try to get into Python shell and follow along '''
 # Define the Post class to manage actions in 'posts' table,  with a relationship to 'users' table
-class User(db.Model):
+class Theme(db.Model):
     __tablename__ = 'theme_data'
     id = db.Column(db.Integer, primary_key=True)
     _name = db.Column(db.String(255), unique=False, nullable=False)
@@ -19,13 +18,64 @@ class User(db.Model):
     _role = db.Column(db.String(255))
     theme = db.Column(db.String(10), default='light')
 
-    # rest of the model...
-
-    def update_theme(self, theme):
-        """Update user's theme."""
-        self.theme = theme
-        db.session.commit()
-
+    # Defines a relationship between User record and Notes table, one-to-many (one user to many notes)
+    # constructor of a User object, initializes the instance variables within object (self)
+    def __init__(self, name, uid, password="123qwerty", image='', role="default"):
+        self._name = name    # variables with self prefix become part of the object,
+        self._uid = uid
+        self.set_password(password)
+        self._image = image
+        self._role = role
+    # a name getter method, extracts name from object
+    @property
+    def role(self):
+        return self._role
+    @role.setter
+    def role(self, role):
+        self._role = role
+    
+    @property
+    def image(self):
+        return self._image
+    @image.setter
+    def image(self, image):
+        self._image = image
+        
+    @property
+    def name(self):
+        return self._name
+    # a setter function, allows name to be updated after initial object creation
+    @name.setter
+    def name(self, name):
+        self._name = name
+    # a getter method, extracts email from object
+    @property
+    def uid(self):
+        return self._uid
+    # a setter function, allows name to be updated after initial object creation
+    @uid.setter
+    def uid(self, uid):
+        self._uid = uid
+    # check if uid parameter matches user id in object, return boolean
+    def is_uid(self, uid):
+        return self._uid == uid
+    @property
+    def password(self):
+        return self._password[0:10] + "..." # because of security only show 1st characters
+    # update password, this is conventional setter
+    def set_password(self, password):
+        """Create a hashed password."""
+        self._password = generate_password_hash(password, "pbkdf2:sha256", salt_length=10)
+    # check password parameter versus stored/encrypted password
+    def is_password(self, password):
+        """Check against hashed password."""
+        result = check_password_hash(self._password, password)
+        return result
+    # dob property is returned as string, to avoid unfriendly outcomes
+    # output content using str(object) in human readable form, uses getter
+    # output content using json dumps, this is ready for API response
+    def __str__(self):
+        return json.dumps(self.read())
     # CRUD create/add a new record to the table
     # returns self or None on error
     def create(self):
@@ -37,7 +87,6 @@ class User(db.Model):
         except IntegrityError:
             db.session.remove()
             return None
-
     # CRUD read converts self to dictionary
     # returns dictionary
     def read(self):
@@ -48,7 +97,6 @@ class User(db.Model):
             "image": self.image,
             "role": self.role
         }
-
     # CRUD update: updates user name, password, phone
     # returns self
     def update(self, name="", uid="", password="", image='', role="default"):
@@ -65,14 +113,12 @@ class User(db.Model):
             self.image = image
         db.session.commit()
         return self
-
     # CRUD delete: remove self
     # None
     def delete(self):
         db.session.delete(self)
         db.session.commit()
         return None
-
 """Database Creation and Testing """
 # Builds working data for testing
 def initTheme():
@@ -80,21 +126,21 @@ def initTheme():
         """Create database and tables"""
         db.create_all()
         """Tester data for table"""
-        u1 = User(name='Thomas Edison', uid='toby', password='123toby')
-        u2 = User(name='Nicholas Tesla', uid='niko', password='123niko')
-        u3 = User(name='Alexander Graham Bell', uid='lex', password='123bell')
-        u4 = User(name='Grace Hopper', uid='hop', password='123hop')
-        u5 = User(name='Admin', uid='root', password='root', role="admin")
-        users = [u1, u2, u3, u4, u5]
+        u1 = Theme(name='Thomas Edison', uid='toby', password='123toby')
+        u2 = Theme(name='Nicholas Tesla', uid='niko', password='123niko')
+        u3 = Theme(name='Alexander Graham Bell', uid='lex', password='123bell')
+        u4 = Theme(name='Grace Hopper', uid='hop', password='123hop')
+        u5 = Theme(name='Admin', uid='root', password='root', role="admin")
+        themes = [u1, u2, u3, u4, u5]
         """Builds sample user/note(s) data"""
-        for user in users:
+        for theme in themes:
             try:
                 '''add a few 1 to 4 notes per user'''
                 for num in range(randrange(1, 4)):
-                    note = "#### " + user.name + " note " + str(num) + ". \n Generated by test data."
+                    note = "#### " + theme.name + " note " + str(num) + ". \n Generated by test data."
                 '''add user/post data to table'''
-                user.create()
+                theme.create()
             except IntegrityError:
                 '''fails with bad or duplicate data'''
                 db.session.remove()
-                print(f"Records exist, duplicate email, or error: {user.uid}")
+                print(f"Records exist, duplicate email, or error: {theme.uid}")

@@ -2,7 +2,8 @@ import threading
 from flask import render_template, request, jsonify
 from flask.cli import AppGroup
 from __init__ import app, db, cors
-from api.theme import theme_api  # Import theme_api instead of user_api
+from api.theme import theme_api
+from api.user import user_api
 from api.player import player_api
 from api.titanic import titanic_api
 from api.food import food_api
@@ -38,6 +39,7 @@ from projects.projects import app_projects # Blueprint directory import projects
 
 # register URIs from both files
 app.register_blueprint(theme_api)
+app.register_blueprint(user_api)
 app.register_blueprint(player_api)
 app.register_blueprint(covid_api)
 app.register_blueprint(joke_api)
@@ -65,7 +67,7 @@ def table():
 def settings():
     return render_template("settings.html")
 
-@app.route('/api/theme/save_settings', methods=['PUT'])
+@app.route('/api/themes/save_settings', methods=['POST'])
 def save_settings():
     try:
         settings = request.json.get('settings')
@@ -97,8 +99,9 @@ def generate_data():
 app.cli.add_command(custom_cli)
 # @app.before_first_request
 def activate_job():
-    initUsers()
-    initBakings()
+   initUsers()
+   initBakings()
+   initTheme()
 
 # this runs the application on the development server
 if __name__ == "__main__":
