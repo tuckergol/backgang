@@ -86,7 +86,8 @@ class UserAPI:
             users = User.query.all()
             for user in users:
                 if user.uid == uid:
-                    user.update(uid,'','', '', items, points)
+                    print(items)
+                    user.update(uid,'','','','', items, points)
             return f"{user.read()} Updated"
     
     class _Security(Resource):
