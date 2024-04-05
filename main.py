@@ -10,6 +10,7 @@ from api.food import food_api
 from api.bakery import bakery_api
 from api.stock import stocks_api
 from api.house_price import house_price_api
+from api.user import user_api
 # database migrations
 from model.users import initUsers
 from model.players import initPlayers
@@ -49,6 +50,7 @@ app.register_blueprint(stocks_api)
 app.register_blueprint(bakery_api)
 app.register_blueprint(house_price_api)
 app.register_blueprint(baking_api)
+app.register_blueprint(user_api)
 app.register_blueprint(app_projects)
 
 @app.errorhandler(404)
