@@ -21,7 +21,7 @@ from api.joke import joke_api
 
 # setup App pages from second file
 from projects.projects import app_projects
-
+#test
 # database migrations from second file
 from model.foods import initfood
 from model.bakeries import initbakery
