@@ -2,7 +2,7 @@ import threading
 from flask import render_template, request, jsonify
 from flask.cli import AppGroup
 from __init__ import app, db, cors
-from api.user import user_api
+from api.theme import theme_api  # Import theme_api instead of user_api
 from api.player import player_api
 from api.titanic import titanic_api
 from api.food import food_api
@@ -13,6 +13,7 @@ from api.house_price import house_price_api
 from model.users import initUsers
 from model.players import initPlayers
 from model.bakings import initBakings
+from model.themes import initTheme
 
 # setup APIs from first file
 from api.covid import covid_api
@@ -36,7 +37,7 @@ db.init_app(app)
 from projects.projects import app_projects # Blueprint directory import projects definition
 
 # register URIs from both files
-app.register_blueprint(user_api)
+app.register_blueprint(theme_api)
 app.register_blueprint(player_api)
 app.register_blueprint(covid_api)
 app.register_blueprint(joke_api)
@@ -64,7 +65,7 @@ def table():
 def settings():
     return render_template("settings.html")
 
-@app.route('/api/users/save_settings', methods=['POST'])
+@app.route('/api/theme/save_settings', methods=['PUT'])
 def save_settings():
     try:
         settings = request.json.get('settings')
@@ -90,6 +91,7 @@ def generate_data():
     initBakings()
     initfood()
     initbakery()
+    initTheme()
 
 # Register the custom command group with the Flask application
 app.cli.add_command(custom_cli)
