@@ -10,12 +10,14 @@ from api.food import food_api
 from api.bakery import bakery_api
 from api.stock import stocks_api
 from api.house_price import house_price_api
+from auth_middleware import token_required
 
 # database migrations
-from model.users import initUsers
+from model.users import initUsers, User
 from model.players import initPlayers
 from model.bakings import initBakings
 from model.themes import initTheme
+from model.painting import initImageTable, Painting
 
 # setup APIs from first file
 from api.covid import covid_api
@@ -64,6 +66,29 @@ def index():
 def table():
     return render_template("table.html")
 
+@app.route("/uploadPainting",methods=["POST"])
+@token_required()
+def uploadPainting(current_user):
+    data = request.get_json()
+    painting =  Painting(userID=current_user.id,image=data["painting"])
+    db.session.add(painting)
+    db.session.commit()
+    return "Success"
+
+@app.route("/getPainting",methods=["GET"])
+def getPainting():
+    paintings = Painting.query.all()
+    imglist = []
+    print(paintings)
+    for img in paintings:
+        imglist.append({
+            'image':img.image,
+            'username':User.query.get(img.userID).name
+        })
+        
+    return jsonify({"paintings":imglist})
+    
+
 @app.route('/settings/')
 def settings():
     return render_template("settings.html")
@@ -103,6 +128,8 @@ def activate_job():
    initUsers()
    initBakings()
    initTheme()
+   
+initImageTable()
 
 # this runs the application on the development server
 if __name__ == "__main__":
