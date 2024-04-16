@@ -11,6 +11,13 @@ from api.bakery import bakery_api
 from api.stock import stocks_api
 from api.house_price import house_price_api
 from auth_middleware import token_required
+from api.memeforge import meme_forge_api
+#from flask_cors import CORS
+#from flask import Flask
+
+#app = Flask(__name__)
+#CORS(app, resources={r"/api/*": {"origins": ["http://localhost:4100", "http://127.0.0.1:4100", "https://tuckergol.github.io/frontgang/"]}})
+
 
 # database migrations
 from model.users import initUsers, User
@@ -53,6 +60,8 @@ app.register_blueprint(bakery_api)
 app.register_blueprint(house_price_api)
 app.register_blueprint(baking_api)
 app.register_blueprint(app_projects)
+app.register_blueprint(meme_forge_api)
+
 
 @app.errorhandler(404)
 def page_not_found(e):

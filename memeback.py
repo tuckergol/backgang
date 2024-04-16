@@ -1,3 +1,10 @@
+from flask import Flask
+from flask_cors import CORS
+
+app = Flask(__name__)
+CORS(app, resources={r"/api/*": {"origins": ["http://127.0.0.1:4100"]}})
+
+
 import threading
 
 # import "packages" from flask
@@ -65,5 +72,4 @@ app.cli.add_command(custom_cli)
         
 # this runs the application on the development server
 if __name__ == "__main__":
-    # change name for testing
-    app.run(debug=True, host="0.0.0.0", port="8762")
+    app.run(debug=True, host="0.0.0.0", port=8762)
