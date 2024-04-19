@@ -660,6 +660,40 @@ class StocksAPI(Resource):
 
             print(image_base64)
             return jsonify({'image': image_base64})
+    class _Owned(Resource):
+        def post(self):
+            body = request.get_json()
+            uid = body.get("uid")
+            listdata = [[0,1000]]
+            transaction = Stock_Transactions.query.filter_by(_uid=uid).all()
+            #sortedtransactio = transaction[0]
+            #print("this is transactionx:"+str(sortedtransactio.uid))
+            #print("this is transactiony:"+str(sortedtransactio.transaction_type))
+            x = 1
+            totalamount = 1000
+            for i in transaction:
+                y=i.id-1
+                print("this is y:" + str(y))
+                transactionamount = transaction[y]
+                transactionmoney = transactionamount.transaction_amount
+
+                print("this is transactiamount" + str(transactionmoney))
+                if str(transactionamount.transaction_type) == "buy":
+                    print("this is transaction type:"+str(transactionamount.transaction_type))
+                    totalamount = totalamount - transactionmoney
+                    print("this is totalamount:" + str(totalamount))
+                    list1 = [x,totalamount]
+                    listdata.append(list1)
+                if str(transactionamount.transaction_type) == "sell":
+                    totalamount = totalamount + transactionmoney
+                    print("this is transaction type:"+str(transactionamount.transaction_type))
+                    print("this is totalamount:" + str(totalamount))
+                    list1 = [x,totalamount]
+                    listdata.append(list1)
+                x += 1
+                print(listdata)
+            data = jsonify(listdata)
+            return data
 
 
 
@@ -682,6 +716,7 @@ class StocksAPI(Resource):
     api.add_resource(_Portfolio2, '/portfolio')
     api.add_resource(_SellStock, '/sell')
     api.add_resource(_Graph, '/graph')
+    api.add_resource(_Owned, '/owned')
 
 
             
