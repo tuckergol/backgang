@@ -4,6 +4,17 @@ from PIL import Image
 import base64
 from io import BytesIO
 import json 
+from __init__ import db, app
+
+class Meme(db.Model):
+    userID = db.Column(db.Integer,db.ForeignKey('users.id'))
+    id = db.Column(db.Integer,primary_key=True)
+    image = db.Column(db.Text)
+    
+def initMeme():
+    with app.app_context():
+        db.create_all()
+    
 
 Base = declarative_base()
 
@@ -23,7 +34,7 @@ def clearDatabase():
     session.close()
 
 class Images(Base):
-    __tablename__ = 'images'
+    __tablename__ = 'memes'
     imageName = Column(String, primary_key=True, nullable=False, unique=False)  # Added nullable=False for primary key
     imageFunc = Column(String, nullable=False, unique=False)  # Added nullable=False for non-nullable columns
     imageBase64 = Column(String, nullable=False, unique=False)

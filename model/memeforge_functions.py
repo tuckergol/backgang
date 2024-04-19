@@ -18,7 +18,7 @@ def base64toImage(base64string):
     return image
 # memeforge_functions.py
 
-def meme_maker(image, top_text, bottom_text, font_size=5000):
+def meme_maker(image, top_text, bottom_text, font_size=300):
  
     # Specify the font and size
     font = ImageFont.load_default()  # Using a default built-in font
@@ -27,8 +27,8 @@ def meme_maker(image, top_text, bottom_text, font_size=5000):
     draw = ImageDraw.Draw(image)
     
     # Calculate text lengths
-    top_text_length = draw.textlength(top_text, font=font)
-    bottom_text_length = draw.textlength(bottom_text, font=font)
+    top_text_length = draw.textlength(top_text, font=font, font_size=font_size)
+    bottom_text_length = draw.textlength(bottom_text, font=font, font_size=font_size)
     
     # Calculate text positions
     top_text_position = ((image.width - top_text_length) // 2, 10)

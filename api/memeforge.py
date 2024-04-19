@@ -6,8 +6,11 @@ import random
 import os
 from auth_middleware import token_required
 from model.memeforge_functions import *
-from model.memeforge_database import *
+from model.memeforge_database import initMeme
 from flask_login import login_user, logout_user, current_user, login_required
+from model.memeforge_database import createImage
+from model.memeforge_database import queryImages
+from model.memeforge_database import clearDatabase
 
 meme_forge_api = Blueprint('meme_forge_api', __name__,
                    url_prefix='/api/memeforge')

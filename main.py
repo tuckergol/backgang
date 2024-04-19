@@ -12,6 +12,7 @@ from api.stock import stocks_api
 from api.house_price import house_price_api
 from auth_middleware import token_required
 from api.memeforge import meme_forge_api
+from model.memeforge_database import initMeme
 #from flask_cors import CORS
 #from flask import Flask
 
