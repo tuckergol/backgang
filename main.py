@@ -24,7 +24,6 @@ from model.memeforge_database import initMeme
 from model.users import initUsers, User
 from model.players import initPlayers
 from model.bakings import initBakings
-from model.themes import initTheme
 from model.painting import initImageTable, Painting
 
 # setup APIs from first file
@@ -97,20 +96,6 @@ def getPainting():
         })
         
     return jsonify({"paintings":imglist})
-    
-
-@app.route('/settings/')
-def settings():
-    return render_template("settings.html")
-
-@app.route('/api/themes/save_settings', methods=['POST'])
-def save_settings():
-    try:
-        settings = request.json.get('settings')
-
-        return jsonify({'message': 'Settings saved successfully'}), 200
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
 
 @app.before_request
 def before_request():
@@ -129,7 +114,6 @@ def generate_data():
     initBakings()
     initfood()
     initbakery()
-    initTheme()
 
 # Register the custom command group with the Flask application
 app.cli.add_command(custom_cli)
@@ -137,7 +121,6 @@ app.cli.add_command(custom_cli)
 def activate_job():
    initUsers()
    initBakings()
-   initTheme()
    
 initImageTable()
 
