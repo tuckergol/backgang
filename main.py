@@ -2,7 +2,7 @@ import threading
 from flask import render_template, request, jsonify
 from flask.cli import AppGroup
 from __init__ import app, db, cors
-from api.theme import theme_api
+from api.theme import settings_api
 from api.user import user_api
 from api.player import player_api
 from api.titanic import titanic_api
@@ -48,7 +48,7 @@ db.init_app(app)
 from projects.projects import app_projects # Blueprint directory import projects definition
 
 # register URIs from both files
-app.register_blueprint(theme_api)
+app.register_blueprint(settings_api)
 app.register_blueprint(user_api)
 app.register_blueprint(player_api)
 app.register_blueprint(covid_api)

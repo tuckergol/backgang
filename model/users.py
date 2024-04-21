@@ -83,14 +83,13 @@ class User(db.Model):
     _friends = db.Column(db.String(20), unique=False, nullable=False)
     _friendrq = db.Column(db.String(255), unique=False, nullable=False)
     _stockmoney = db.Column(db.Integer, unique=False, nullable=False)
-    _theme = db.Column(db.String(20), unique=False, nullable=False)
 
     
     # Defines a relationship between User record and Notes table, one-to-many (one user to many notes)
     posts = db.relationship("Post", cascade='all, delete', backref='users', lazy=True)
 
     # constructor of a User object, initializes the instance variables within object (self)
-    def __init__(self, name, uid, stockmoney, items="[]", password="123qwerty", dob=date.today(), favoritefood='guac', role="User", points = 0, friends='', friendrq='', theme='light'):
+    def __init__(self, name, uid, stockmoney, items="[]", password="123qwerty", dob=date.today(), favoritefood='guac', role="User", points = 0, friends='', friendrq=''):
         self._name = name    # variables with self prefix become part of the object, 
         self._uid = uid
         self._friends = friends
@@ -102,7 +101,6 @@ class User(db.Model):
         self._favoritefood = favoritefood
         self._role = role
         self._points = points
-        self._theme = theme
 
     @property
     def friends(self):
@@ -145,14 +143,6 @@ class User(db.Model):
     @items.setter
     def items(self, items):
         self._items = items
-    
-    @property
-    def theme(self):
-        return self._theme
-    
-    @theme.setter
-    def theme(self, theme):
-        self._theme = theme
 
     # a name getter method, extracts name from object
     @property
@@ -262,13 +252,12 @@ class User(db.Model):
             "items": self.items,
             "points": self.points,
             "friendrq": self.friendrq,
-            "theme": self.theme
 
         }
 
     # CRUD update: updates user name, password, phone
     # returns self
-    def update(self, uid="", password="", dob='', favoritefood='', stockmoney="", items='', points = 0, theme=''):
+    def update(self, uid="", password="", dob='', favoritefood='', stockmoney="", items='', points = 0):
         """only updates values with length"""
         temp = []
         if len(uid) > 0:
@@ -279,8 +268,6 @@ class User(db.Model):
             self.dob = dob
         if len(favoritefood) > 0:
             self.favoritefood = favoritefood
-        if len(theme) > 0:
-            self.theme = theme
         if stockmoney == '':
             self.stockmoney = stockmoney
         if len(items)>0:
@@ -525,10 +512,10 @@ def initUsers():
         """Create database and tables"""
         db.create_all()
         """Tester data for table"""
-        u1 = User(name='FlayFusion', uid='flay',stockmoney=1000, friends=json.dumps(["niko", "lex"]), friendrq=json.dumps(["hop"]), password='123flay', dob=date(1847, 2, 11), role='Admin', items=json.dumps(["egg","flour","sugar","milk","butter"]), points=100, theme='light')
-        u2 = User(name='TheCupcakeChampion', uid='cupcake',stockmoney=1000, friends=json.dumps(["toby", "lex"]), friendrq=json.dumps(["hop"]), password='123cupcake', dob=date(1856, 7, 10), role="User", items=json.dumps(["egg","flour","sugar","milk","butter"]), points=50, theme='light')
-        u3 = User(name='PieProdigy', uid='pie',stockmoney=1000, friends=json.dumps(["niko", "toby"]), friendrq=json.dumps(["hop"]), password='123pie', dob=date(1856, 7, 10), role="User", items=json.dumps(["egg","flour","sugar","milk","butter"]), points=25, theme='light')
-        u4 = User(name='GordonGourmetGrumbles', uid='ramsay',stockmoney=1000, friends=json.dumps(["niko", "lex"]), friendrq=json.dumps(["toby"]), password='123ramsay', dob=date(1906, 12, 9), role="User", items=json.dumps(["egg","flour","sugar","milk","butter"]), points=0, theme='light')
+        u1 = User(name='FlayFusion', uid='flay',stockmoney=1000, friends=json.dumps(["niko", "lex"]), friendrq=json.dumps(["hop"]), password='123flay', dob=date(1847, 2, 11), role='Admin', items=json.dumps(["egg","flour","sugar","milk","butter"]), points=100)
+        u2 = User(name='TheCupcakeChampion', uid='cupcake',stockmoney=1000, friends=json.dumps(["toby", "lex"]), friendrq=json.dumps(["hop"]), password='123cupcake', dob=date(1856, 7, 10), role="User", items=json.dumps(["egg","flour","sugar","milk","butter"]), points=50)
+        u3 = User(name='PieProdigy', uid='pie',stockmoney=1000, friends=json.dumps(["niko", "toby"]), friendrq=json.dumps(["hop"]), password='123pie', dob=date(1856, 7, 10), role="User", items=json.dumps(["egg","flour","sugar","milk","butter"]), points=25)
+        u4 = User(name='GordonGourmetGrumbles', uid='ramsay',stockmoney=1000, friends=json.dumps(["niko", "lex"]), friendrq=json.dumps(["toby"]), password='123ramsay', dob=date(1906, 12, 9), role="User", items=json.dumps(["egg","flour","sugar","milk","butter"]), points=0)
         users = [u1, u2, u3, u4]
 
         """Builds sample user/note(s) data"""
