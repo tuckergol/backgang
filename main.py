@@ -100,7 +100,7 @@ def getPainting():
 @app.before_request
 def before_request():
     allowed_origin = request.headers.get('Origin')
-    if allowed_origin in ['http://localhost:4100', 'http://127.0.0.1:4100', 'https://tuckergol.github.io/frontgang/']:
+    if allowed_origin in ['http://localhost:4100', 'http://127.0.0.1:4100', 'http://127.0.0.1:8008' 'https://tuckergol.github.io/frontgang/']:
         cors._origins = allowed_origin
 
 # Create an AppGroup for custom commands
