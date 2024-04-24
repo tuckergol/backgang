@@ -18,7 +18,7 @@ def base64toImage(base64string):
     return image
 # memeforge_functions.py
 
-def meme_maker(image, top_text, bottom_text, font_size=300):
+def meme_maker(image, top_text, bottom_text, font_size="test"):
  
     # Specify the font and size
     font = ImageFont.load_default()  # Using a default built-in font
@@ -39,4 +39,3 @@ def meme_maker(image, top_text, bottom_text, font_size=300):
     draw.text(bottom_text_position, bottom_text, font=font, fill="black")
     
     return image
-
