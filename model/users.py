@@ -83,13 +83,14 @@ class User(db.Model):
     _friends = db.Column(db.String(20), unique=False, nullable=False)
     _friendrq = db.Column(db.String(255), unique=False, nullable=False)
     _stockmoney = db.Column(db.Integer, unique=False, nullable=False)
+    _pfp = db.Column(db.String(255), unique=False, nullable=False)
 
     
     # Defines a relationship between User record and Notes table, one-to-many (one user to many notes)
     posts = db.relationship("Post", cascade='all, delete', backref='users', lazy=True)
 
     # constructor of a User object, initializes the instance variables within object (self)
-    def __init__(self, name, uid, stockmoney, items="[]", password="123qwerty", dob=date.today(), favoritefood='guac', role="User", points = 0, friends='', friendrq=''):
+    def __init__(self, name, uid, stockmoney, items="[]", password="123qwerty", dob=date.today(), favoritefood='guac', role="User", points = 0, friends='', friendrq='', pfp=''):
         self._name = name    # variables with self prefix become part of the object, 
         self._uid = uid
         self._friends = friends
@@ -101,6 +102,7 @@ class User(db.Model):
         self._favoritefood = favoritefood
         self._role = role
         self._points = points
+        self._pfp = pfp
 
     @property
     def friends(self):
@@ -143,6 +145,14 @@ class User(db.Model):
     @items.setter
     def items(self, items):
         self._items = items
+    
+    @property
+    def pfp(self):
+        return self._pfp
+
+    @pfp.setter
+    def pfp(self, pfp):
+        self._pfp = pfp
 
     # a name getter method, extracts name from object
     @property
@@ -252,12 +262,13 @@ class User(db.Model):
             "items": self.items,
             "points": self.points,
             "friendrq": self.friendrq,
+            "pfp": self.pfp,
 
         }
 
     # CRUD update: updates user name, password, phone
     # returns self
-    def update(self, uid="", password="", dob='', favoritefood='', stockmoney="", items='', points = 0):
+    def update(self, uid="", password="", dob='', favoritefood='', stockmoney="", items='', points = 0, pfp=''):
         """only updates values with length"""
         temp = []
         if len(uid) > 0:
@@ -268,6 +279,8 @@ class User(db.Model):
             self.dob = dob
         if len(favoritefood) > 0:
             self.favoritefood = favoritefood
+        if len(pfp) > 0:
+            self.pfp = pfp
         if stockmoney == '':
             self.stockmoney = stockmoney
         if len(items)>0:

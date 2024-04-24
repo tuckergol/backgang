@@ -2,7 +2,7 @@ import threading
 from flask import render_template, request, jsonify
 from flask.cli import AppGroup
 from __init__ import app, db, cors
-from api.theme import settings_api
+from api.settings import settings_api
 from api.user import user_api
 from api.player import player_api
 from api.titanic import titanic_api
