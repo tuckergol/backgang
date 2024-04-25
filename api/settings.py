@@ -27,17 +27,6 @@ class ChangeUsername(Resource):
         else:
             return {'message': 'Invalid credentials or user not found'}, 404
 
-    def get(self):
-        user_uid = request.args.get('user_uid')
-        if not user_uid:
-            return {'message': 'User ID is required'}, 400
-
-        user = User.query.filter_by(_uid=user_uid).first()
-        if user:
-            return {'user_name': user._name}, 200
-        else:
-            return {'message': 'User not found'}, 404
-
 class ChangeUID(Resource):
     def put(self):
         body = request.get_json()
@@ -56,17 +45,6 @@ class ChangeUID(Resource):
             return {'message': 'User ID updated successfully'}, 200
         else:
             return {'message': 'Invalid credentials or user not found'}, 404
-
-    def get(self):
-        user_name = request.args.get('user_name')
-        if not user_name:
-            return {'message': 'User name is required'}, 400
-
-        user = User.query.filter_by(_name=user_name).first()
-        if user:
-            return {'user_uid': user._uid}, 200
-        else:
-            return {'message': 'User not found'}, 404
 
 class UploadProfilePicture(Resource):
     def post(self):
