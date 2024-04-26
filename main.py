@@ -10,6 +10,7 @@ from api.food import food_api
 from api.bakery import bakery_api
 from api.stock import stocks_api
 from api.house_price import house_price_api
+from api.paint_api import paint_api
 from auth_middleware import token_required
 from api.memeforge import meme_forge_api
 from model.memeforge_database import initMeme
@@ -29,6 +30,7 @@ from model.painting import initImageTable, Painting
 # setup APIs from first file
 from api.covid import covid_api
 from api.joke import joke_api
+
 
 # setup App pages from second file
 from projects.projects import app_projects
@@ -60,8 +62,7 @@ app.register_blueprint(bakery_api)
 app.register_blueprint(house_price_api)
 app.register_blueprint(baking_api)
 app.register_blueprint(app_projects)
-app.register_blueprint(meme_forge_api)
-
+app.register_blueprint(paint_api)
 
 @app.errorhandler(404)
 def page_not_found(e):
@@ -96,6 +97,20 @@ def getPainting():
         })
         
     return jsonify({"paintings":imglist})
+    
+
+@app.route('/settings/')
+def settings():
+    return render_template("settings.html")
+
+@app.route('/api/themes/save_settings', methods=['POST'])
+def save_settings():
+    try:
+        settings = request.json.get('settings')
+
+        return jsonify({'message': 'Settings saved successfully'}), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 @app.before_request
 def before_request():
@@ -114,6 +129,8 @@ def generate_data():
     initBakings()
     initfood()
     initbakery()
+    #initTheme()
+
 
 # Register the custom command group with the Flask application
 app.cli.add_command(custom_cli)

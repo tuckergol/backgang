@@ -23,7 +23,10 @@ class HousePriceAPI(Resource):
         X = data.drop(['price', 'furnishingstatus'], axis=1)
         y = data['price']
         
-        # Train the model
+        # Train the model     
+        # trains the model according to linear regression
+        # the model will be trained to predict healtime based on the other categories
+
         self.model = LinearRegression()
         self.model.fit(X, y)
 
