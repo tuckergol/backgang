@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request
 from flask_restful import Api, Resource
 import base64
 from model.users import User
@@ -15,10 +15,8 @@ class ChangeUsername(Resource):
         user_uid = body.get('_uid')
         password = body.get('_password')
         new_name = body.get('new_name')
-
         if not all([current_name, user_uid, password, new_name]):
             return {'message': 'All fields are required'}, 400
-
         user = User.query.filter_by(_uid=user_uid).first()
         if user and user._name == current_name and check_password_hash(user._password, password):
             user._name = new_name
@@ -34,10 +32,8 @@ class ChangeUID(Resource):
         user_uid = body.get('_uid')
         password = body.get('_password')
         new_uid = body.get('new_uid')
-
         if not all([current_name, user_uid, password, new_uid]):
             return {'message': 'All fields are required'}, 400
-
         user = User.query.filter_by(_uid=user_uid).first()
         if user and user._name == current_name and check_password_hash(user._password, password):
             user._uid = new_uid
@@ -53,7 +49,6 @@ class UploadProfilePicture(Resource):
         file = request.files['file']
         if file.filename == '':
             return {'message': 'No selected file'}, 400
-
         user_uid = request.form.get('uid')
         user = User.query.filter_by(_uid=user_uid).first()
         if user:
