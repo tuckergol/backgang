@@ -26,6 +26,7 @@ from model.users import initUsers, User
 from model.players import initPlayers
 from model.bakings import initBakings
 from model.painting import initImageTable, Painting
+from model.stockfilter import initstock
 
 # setup APIs from first file
 from api.covid import covid_api
@@ -129,6 +130,7 @@ def generate_data():
     initBakings()
     initfood()
     initbakery()
+    initstock()
     #initTheme()
 
 
