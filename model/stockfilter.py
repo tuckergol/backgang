@@ -18,7 +18,7 @@ class Stocksort:
     def __init__(self):
         self.data = pd.read_csv('S&P500.csv')
     def _clean(self):
-        self.data.drop(columns=['CIK','Date added','location'],inplace=True)
+        self.data.drop(columns=['CIK','Date added','Headquarters Location'],inplace=True)
         self.data['GICS Sector'] = self.data['GICS Sector'].apply(
             lambda x: 1 if x == 'Communication Services' else
                       2 if x == 'Consumer Discretionary' else
@@ -47,7 +47,8 @@ class Stocksort:
                       10 if x == 'Real Estate' else
                       0
         )
-        
+        num = payload_df['GICS Sector'].tolist()
+        return num
     @classmethod
     def get_instance(cls):
         """Gets, and conditionally cleans and builds, the singleton instance of the Food model."""

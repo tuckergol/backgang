@@ -11,6 +11,7 @@ from api.bakery import bakery_api
 from api.stock import stocks_api
 from api.house_price import house_price_api
 from api.paint_api import paint_api
+from api.stocksort import stocks_sort
 from auth_middleware import token_required
 from api.memeforge import meme_forge_api
 from model.memeforge_database import initMeme
@@ -64,6 +65,7 @@ app.register_blueprint(house_price_api)
 app.register_blueprint(baking_api)
 app.register_blueprint(app_projects)
 app.register_blueprint(paint_api)
+app.register_blueprint(stocks_sort)
 
 @app.errorhandler(404)
 def page_not_found(e):

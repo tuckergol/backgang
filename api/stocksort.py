@@ -11,10 +11,10 @@ from flask_restful import Resource
 from flask import Blueprint, jsonify, request 
 from flask_restful import Api, Resource
 
-food_api = Blueprint('food_api', __name__, url_prefix='/api/food')
-api = Api(food_api)
+stocks_sort = Blueprint('stocks_sort', __name__, url_prefix='/api/sort')
+api = Api(stocks_sort)
 
-class PredictItem(Resource):
+class stockssort(Resource):
     
     def __init__(self):
         self.model = Stocksort()  
@@ -33,4 +33,4 @@ class PredictItem(Resource):
         except Exception as e:
             return jsonify({'error': str(e)})
         
-api.add_resource(PredictItem, '/predict')
+api.add_resource(stockssort, '/sort')
