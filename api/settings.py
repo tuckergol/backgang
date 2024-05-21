@@ -34,29 +34,6 @@ class ChangeUsername(Resource):
         else:
             return {'message': 'Invalid credentials or user not found'}, 404
 
-# Resource: UID-changing
-# Very similar to username-changing but involving modification of UID
-class ChangeUID(Resource):
-    def put(self):
-        body = request.get_json()
-        current_name = body.get('_name')
-        user_uid = body.get('_uid')
-        password = body.get('_password')
-        new_uid = body.get('new_uid')
-
-        # Check for all required fields
-        if not all([current_name, user_uid, password, new_uid]):
-            return {'message': 'All fields are required'}, 400
-
-        # Fetch user by UID, check credentials
-        user = User.query.filter_by(_uid=user_uid).first()
-        if user and user._name == current_name and check_password_hash(user._password, password):
-            user._uid = new_uid  # Update UID
-            db.session.commit()  # Commit changes to database
-            return {'message': 'User ID updated successfully'}, 200
-        else:
-            return {'message': 'Invalid credentials or user not found'}, 404
-
 # Resource: uploading profile picture/image
 class UploadProfilePicture(Resource):
     def post(self):
@@ -92,7 +69,6 @@ class GetUserData(Resource):
         if user:
             user_data = {
                 'name': user._name,
-                'uid': user._uid,
             }
             return user_data, 200
         else:
@@ -100,6 +76,5 @@ class GetUserData(Resource):
 
 # Register API resources with routes
 api.add_resource(ChangeUsername, '/change-name')
-api.add_resource(ChangeUID, '/change-uid')
 api.add_resource(UploadProfilePicture, '/profile-picture')
 api.add_resource(GetUserData, '/get-user-data')
