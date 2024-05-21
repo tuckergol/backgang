@@ -1,24 +1,16 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, Blueprint
 from flask_restful import Resource, Api
-import pandas as pd
-from model.stockfilter import Stocksort
-from flask import Flask, request, jsonify
-import pandas as pd
-import numpy as np
-from sklearn.preprocessing import OneHotEncoder
-from sklearn.ensemble import RandomForestClassifier
-from flask_restful import Resource
-from flask import Blueprint, jsonify, request 
-from flask_restful import Api, Resource
 from datetime import datetime
+from model.stockfind import Stockfind
 
+# Create Flask blueprint for the new endpoint
 stocks_found = Blueprint('stocks_found', __name__, url_prefix='/api/found')
 api = Api(stocks_found)
 
 class FoundingDateFilterResource(Resource):
     
     def __init__(self):
-        self.model = Stocksort.get_instance()
+        self.model = Stockfind.get_instance()
 
     def post(self):
         try:
