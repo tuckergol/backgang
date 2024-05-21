@@ -1,10 +1,10 @@
 import pandas as pd
 
-class Stocksort:
+class Stockfind:
     _instance = None
     
     def __init__(self):
-        self.data = pd.read_csv('https://datahub.io/core/s-and-p-500-companies/r/constituents.csv')
+        self.data = pd.read_csv('S&P500.csv')
         self._clean()
 
     def _clean(self):
@@ -43,5 +43,5 @@ class Stocksort:
             cls._instance = cls()
         return cls._instance
 
-def initstock():
-    Stocksort.get_instance()
+def initfind():
+    Stockfind.get_instance()
