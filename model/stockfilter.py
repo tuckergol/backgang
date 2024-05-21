@@ -89,25 +89,17 @@ class Stocksort:
             "Materials": 9,
             "Real Estate": 10
         }
-
         # Define the mapping function
         def map_sector(sector):
             return sector_mapping.get(sector, 0)  # Return 0 if the sector is not found
-
         # Apply the mapping function to the "GICS SECTOR" column
         df['GICS_SECTOR_NUMERIC'] = df['GICS Sector'].apply(map_sector)
-
         # Print the unique values to check the mapping
         print(df['GICS_SECTOR_NUMERIC'].unique())
-
         # Check a sample of the DataFrame to verify the new column
-        #print(df.head())
-
         # Sort the DataFrame based on the numeric values
         sorted_df = df.sort_values(by='GICS_SECTOR_NUMERIC')
-
         # Print the sorted DataFrame to verify
-        #print(sorted_df)
         result_list = sorted_df[['Symbol', 'GICS_SECTOR_NUMERIC']].to_records(index=False).tolist()
         return result_list
 
@@ -126,8 +118,27 @@ class Stocksort:
                       10 if x == 'Real Estate' else
                       0
         )
-        num = payload_df['GICS Sector'].tolist()
-        return num
+        num = int(payload_df['GICS Sector'])
+        initialbucket = self._sort()
+        sortedate = initialbucket[num]
+        return sortedate
+    def _sort(self):
+        result_list = self._clean()  # Corrected the method call
+        print(result_list)
+        unique = self.data['GICS Sector'].unique().tolist()
+        print(unique)
+        print(len(unique))
+        initialbucket = []
+        for i in unique:
+            newbucket = []
+            initialbucket.append(newbucket)
+        print(initialbucket)
+        for i in result_list:
+            print(i[1])
+            sortnum = i[1]
+            initialbucket[sortnum].append(i)
+        print(initialbucket)
+        return initialbucket
     @classmethod
     def get_instance(cls):
         """Gets, and conditionally cleans and builds, the singleton instance of the Food model."""
