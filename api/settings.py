@@ -57,7 +57,7 @@ class UploadProfilePicture(Resource):
         else:
             return {'message': 'User not found'}, 404
 
-class GetUserData(Resource):
+class GetUsername(Resource):
     def get(self):
         user_uid = request.args.get('uid')
         
@@ -77,4 +77,4 @@ class GetUserData(Resource):
 # Register API resources with routes
 api.add_resource(ChangeUsername, '/change-name')
 api.add_resource(UploadProfilePicture, '/profile-picture')
-api.add_resource(GetUserData, '/get-user-data')
+api.add_resource(GetUsername, '/get-user-name')
