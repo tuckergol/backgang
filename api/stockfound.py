@@ -15,6 +15,7 @@ class FoundingDateFilterResource(Resource):
     def post(self):
         try:
             payload = request.get_json()  # Get JSON payload from the POST request
+            print(f"Received payload: {payload}")  # Debugging line to print the payload
             if 'dates' not in payload or len(payload['dates']) != 2:
                 return {'error': 'Start and end dates not provided'}, 400  # Return error if 'dates' are not in the payload
 

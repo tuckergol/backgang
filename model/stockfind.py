@@ -57,9 +57,10 @@ class Stockfind:
                 k += 1
 
     def get_companies_by_date_range(self, start_year, end_year):
+        # Filter the data to get companies founded within the specified date range
         filtered_data = self.data[(self.data['Founded'] >= start_year) & (self.data['Founded'] <= end_year)]
         data_list = filtered_data.to_dict('records')
-        self.merge_sort(data_list)
+        self.merge_sort(data_list)  # Sort the list using merge sort
         return data_list
 
     @classmethod
