@@ -1,5 +1,5 @@
-import pandas as pd  # Import pandas for data manipulation and analysis
-import re  # Import regular expressions for pattern matching
+import pandas as pd
+import re
 
 class Stockfind:
     _instance = None  # Class-level variable to hold the singleton instance
@@ -24,7 +24,7 @@ class Stockfind:
         self.data['Founded'] = pd.to_numeric(self.data['Founded'], errors='coerce')
 
     def merge_sort(self, arr):
-        # Recursive merge sort implementation to sort the array of dictionaries by 'Difference' key
+        # Recursive merge sort implementation to sort the array of dictionaries by 'Founded' key
         if len(arr) > 1:
             mid = len(arr) // 2  # Find the middle of the array
             left_half = arr[:mid]  # Split the array into left half
@@ -36,7 +36,7 @@ class Stockfind:
             i = j = k = 0  # Initialize indices for left half, right half, and main array
             # Merge the sorted halves back into the main array
             while i < len(left_half) and j < len(right_half):
-                if left_half[i]['Difference'] < right_half[j]['Difference']:
+                if left_half[i]['Founded'] < right_half[j]['Founded']:
                     arr[k] = left_half[i]
                     i += 1
                 else:
@@ -56,24 +56,11 @@ class Stockfind:
                 j += 1
                 k += 1
 
-    def get_closest_founding_dates(self, dates):
-        results = []
-        for date in dates:
-            # Calculate the absolute difference between the given date and each company's founding date
-            self.data['Difference'] = abs(self.data['Founded'] - date)
-            # Convert DataFrame to a list of dictionaries for sorting
-            data_list = self.data.to_dict('records')
-            self.merge_sort(data_list)  # Sort the list using merge sort
-
-            closest = data_list[0]  # Get the closest founding date (first element after sorting)
-            # Append the result to the results list
-            results.append({
-                'Company Name': closest['Symbol'],
-                'Founded': int(closest['Founded']),
-                'Difference': int(closest['Difference']),
-                'GICS Sector': closest['GICS Sector']
-            })
-        return results  # Return the list of results
+    def get_companies_by_date_range(self, start_year, end_year):
+        filtered_data = self.data[(self.data['Founded'] >= start_year) & (self.data['Founded'] <= end_year)]
+        data_list = filtered_data.to_dict('records')
+        self.merge_sort(data_list)
+        return data_list
 
     @classmethod
     def get_instance(cls):
@@ -85,5 +72,3 @@ class Stockfind:
 def initfind():
     # Initialize the Stockfind singleton instance
     Stockfind.get_instance()
-
-
