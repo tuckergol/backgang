@@ -1,5 +1,5 @@
 # imports
-from flask import Blueprint, request
+from flask import Blueprint, request, g
 from flask_restful import Api, Resource
 import base64
 from model.users import User
@@ -62,7 +62,7 @@ class GetUsername(Resource):
         user_uid = request.args.get('uid')
         
         if not user_uid:
-            return {'message': 'UID is required'}, 400
+            return {'message': 'UID required. Please sign in.'}, 400
         
         user = User.query.filter_by(_uid=user_uid).first()
         
@@ -73,8 +73,23 @@ class GetUsername(Resource):
             return user_data, 200
         else:
             return {'message': 'User not found'}, 404
+        
+class GetProfilePicture(Resource):
+    def get(self):
+        user_uid = request.args.get('uid')
+
+        if not user_uid:
+            return {'message': 'UID is required. Please sign in.'}, 400
+
+        user = User.query.filter_by(_uid=user_uid).first()
+
+        if user and user._pfp:
+            return {'pfp': user._pfp}, 200
+        else:
+            return {'message': 'User not found or no profile picture'}, 404 
 
 # Register API resources with routes
 api.add_resource(ChangeUsername, '/change-name')
 api.add_resource(UploadProfilePicture, '/profile-picture')
 api.add_resource(GetUsername, '/get-user-name')
+api.add_resource(GetProfilePicture, '/get-profile-picture')
