@@ -30,9 +30,13 @@ class StocksAPI(Resource):
         
         def get(self):
             #updates stock price:
-            stocks = Stocks.query.all()  
+            stocks = Stocks.query.offset(0).limit(26).all()
+            print(stocks)
             api_key = 'OyGEcU5tCO127eOKHqoraOGY0TNAwlFS'  # Replace with your FMP API key
+            #F2RXN9arcI1Yyh0CSkmHGarjMIpfZ2ow
+            #xAxPbodLC12nNCwa5gHiK6YZVQecllPA
             for stock in stocks:
+                #print("this is stock:"+ stock)
                 symbol = stock.symbol
                 url = f'https://financialmodelingprep.com/api/v3/quote/{symbol}?apikey={api_key}'
                 response = requests.get(url)
@@ -41,9 +45,12 @@ class StocksAPI(Resource):
                     data = response.json()
                     
                     if data:  # Check if the list is not empty
-                        latest_price = data[0].get('price')  # Use .get() to avoid KeyError
+                        latest_price = data[0].get('price')
+                        latest_quantity = data[0].get('marketCap')
+                        # Use .get() to avoid KeyError
                         if latest_price is not None:
                             stock.sheesh = latest_price
+                            stock.quantity =latest_quantity
                             db.session.commit()
                             print(f"Updated price for {symbol} to {latest_price}")
                         else:
@@ -54,7 +61,37 @@ class StocksAPI(Resource):
                     print(f"Failed to fetch data for {symbol}. Status code: {response.status_code}")                          
             #displays database data:
             json_ready = [stock.read() for stock in stocks]
+            print("this is " + str(json_ready))
             return jsonify(json_ready)
+    class _Sortdisplay(Resource):
+        def post(self):
+            body = request.get_json()
+            print(body)
+            stocks = Stocks.query.all()
+            returnlist = []
+            newlist = []
+            json_ready = [stock.read() for stock in stocks]
+            for stock in body:
+                sym = stock[0]
+                print("this is symbol" + sym)
+                transaction = Stocks.query.filter_by(_symbol=sym).all()
+                print("this is transacotin: " + str(transaction))
+                returnlist.append(transaction)
+            print("this is list: " + str(returnlist))
+            for i in returnlist:
+                json_ready = [stock.read() for stock in i]
+                print("this is json" + str(json_ready[0]))
+                new_json_ready = json_ready[0]
+                newlist.append(new_json_ready)
+            print("this is new list" + str(newlist))
+            data = jsonify(newlist)
+            return data
+
+            
+             
+                
+                
+        
     class _Transactionsdisplay(Resource):
         #@token_required1("Admin")
         
@@ -717,6 +754,7 @@ class StocksAPI(Resource):
     api.add_resource(_SellStock, '/sell')
     api.add_resource(_Graph, '/graph')
     api.add_resource(_Owned, '/owned')
+    api.add_resource(_Sortdisplay, '/sortdisplay')
 
 
             
