@@ -39,7 +39,7 @@ class UploadProfilePicture(Resource):
     def post(self):
         # Check if file part is in request
         if 'file' not in request.files:
-            return {'message': 'No file part'}, 400
+            return {'message': 'Please upload an image first'}, 400
         file = request.files['file'] # Retrieve file from request
         # Ensure file selected for upload
         if file.filename == '':
@@ -85,8 +85,6 @@ class GetProfilePicture(Resource):
 
         if user and user._pfp:
             return {'pfp': user._pfp}, 200
-        else:
-            return {'message': 'User not found or no profile picture'}, 404 
 
 # Register API resources with routes
 api.add_resource(ChangeUsername, '/change-name')
