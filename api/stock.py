@@ -86,12 +86,47 @@ class StocksAPI(Resource):
             print("this is new list" + str(newlist))
             data = jsonify(newlist)
             return data
+    class _Singleupdata(Resource):
+        def post(self):
+            #updates stock price:
+            body = request.get_json()
+            symbol = body.get("symbol")
+            print("this is body: " + str(symbol))
+            api_key = 'xAxPbodLC12nNCwa5gHiK6YZVQecllPA'  # Replace with your FMP API key
+            url = f'https://financialmodelingprep.com/api/v3/quote/{symbol}?apikey={api_key}'
+            stocks = Stocks.query.all()
+            response = requests.get(url)
+            json_ready = [stock.read() for stock in stocks]
+            list1 = [item for item in json_ready if item.get('symbol') == symbol]
+            print(str(list1))
+
+            if response.status_code == 200:
+                data = response.json()
+                
+                if data:  # Check if the list is not empty
+                    latest_price = data[0].get('price')
+                    latest_quantity = data[0].get('marketCap')
+                    # Use .get() to avoid KeyError
+                    if latest_price is not None:
+                        list1[0]["sheesh"] = latest_price
+                        list1[0]["quantity"] =latest_quantity
+                        db.session.commit()
+                        print(f"Updated price for {symbol} to {latest_price}")
+                    else:
+                        print(f"Price data not found for {symbol}")
+                else:
+                    print(f"Empty data for {symbol}")
+            else:
+                print(f"Failed to fetch data for {symbol}. Status code: {response.status_code}")
+            newprice = list1[0]["sheesh"]
+            print("this is new price" +  str(newprice))
+            data = jsonify(str(newprice))
+            print("this is data" + str(data))
+            return data
 
             
-             
-                
-                
-        
+
+            
     class _Transactionsdisplay(Resource):
         #@token_required1("Admin")
         
@@ -709,21 +744,21 @@ class StocksAPI(Resource):
             x = 1
             totalamount = 1000
             for i in transaction:
-                y=i.id-1
-                print("this is y:" + str(y))
-                transactionamount = transaction[y]
-                transactionmoney = transactionamount.transaction_amount
+                ##y=i.id-1
+                ##print("this is y:" + str(y))
+                ##transactionamount = transaction[y]
+                transactionmoney = i.transaction_amount
 
                 print("this is transactiamount" + str(transactionmoney))
-                if str(transactionamount.transaction_type) == "buy":
-                    print("this is transaction type:"+str(transactionamount.transaction_type))
+                if str(i.transaction_type) == "buy":
+                    print("this is transaction type:"+str(i.transaction_type))
                     totalamount = totalamount - transactionmoney
                     print("this is totalamount:" + str(totalamount))
                     list1 = [x,totalamount]
                     listdata.append(list1)
-                if str(transactionamount.transaction_type) == "sell":
+                if str(i.transaction_type) == "sell":
                     totalamount = totalamount + transactionmoney
-                    print("this is transaction type:"+str(transactionamount.transaction_type))
+                    print("this is transaction type:"+str(i.transaction_type))
                     print("this is totalamount:" + str(totalamount))
                     list1 = [x,totalamount]
                     listdata.append(list1)
@@ -755,6 +790,7 @@ class StocksAPI(Resource):
     api.add_resource(_Graph, '/graph')
     api.add_resource(_Owned, '/owned')
     api.add_resource(_Sortdisplay, '/sortdisplay')
+    api.add_resource(_Singleupdata, '/singleupdate')
 
 
             
