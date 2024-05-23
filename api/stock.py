@@ -97,31 +97,35 @@ class StocksAPI(Resource):
             stocks = Stocks.query.all()
             response = requests.get(url)
             json_ready = [stock.read() for stock in stocks]
+            print("this is jsonready:" + str(json_ready))
             list1 = [item for item in json_ready if item.get('symbol') == symbol]
             print(str(list1))
-
-            if response.status_code == 200:
-                data = response.json()
-                
-                if data:  # Check if the list is not empty
-                    latest_price = data[0].get('price')
-                    latest_quantity = data[0].get('marketCap')
-                    # Use .get() to avoid KeyError
-                    if latest_price is not None:
-                        list1[0]["sheesh"] = latest_price
-                        list1[0]["quantity"] =latest_quantity
-                        db.session.commit()
-                        print(f"Updated price for {symbol} to {latest_price}")
+            for stock in stocks:
+                if stock.symbol == symbol:
+                    
+                    if response.status_code == 200:
+                        data = response.json()
+                        
+                        if data:  # Check if the list is not empty
+                            latest_price = data[0].get('price')
+                            latest_quantity = data[0].get('marketCap')
+                            # Use .get() to avoid KeyError
+                            if latest_price is not None:
+                                stock.sheesh = latest_price
+                                price = stock.sheesh
+                                stock.quantity =latest_quantity
+                                db.session.commit()
+                                print(f"Updated price for {symbol} to {latest_price}")
+                            else:
+                                print(f"Price data not found for {symbol}")
+                        else:
+                            print(f"Empty data for {symbol}")
                     else:
-                        print(f"Price data not found for {symbol}")
-                else:
-                    print(f"Empty data for {symbol}")
-            else:
-                print(f"Failed to fetch data for {symbol}. Status code: {response.status_code}")
-            newprice = list1[0]["sheesh"]
-            print("this is new price" +  str(newprice))
-            data = jsonify(str(newprice))
-            print("this is data" + str(data))
+                        print(f"Failed to fetch data for {symbol}. Status code: {response.status_code}")
+                    newprice = list1[0]["sheesh"]
+                    print("this is new price" +  str(price))
+                    data = jsonify(str(price))
+                    print("this is data" + str(data))
             return data
 
             
