@@ -121,7 +121,7 @@ def save_settings():
 @app.before_request
 def before_request():
     allowed_origin = request.headers.get('Origin')
-    if allowed_origin in ['http://localhost:4100', 'http://127.0.0.1:4100', 'http://127.0.0.1:8008' 'https://tuckergol.github.io/frontgang/']:
+    if allowed_origin in ['http://localhost:4100', 'http://127.0.0.1:4100', 'http://127.0.0.1:8476' 'https://tuckergol.github.io/frontgang/']:
         cors._origins = allowed_origin
 
 # Create an AppGroup for custom commands
@@ -150,4 +150,4 @@ initImageTable()
 
 # this runs the application on the development server
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port="8008")
+    app.run(debug=True, host="0.0.0.0", port="8476")
