@@ -14,8 +14,6 @@ from api.paint_api import paint_api
 from api.stocksort import stocks_sort
 from api.stockfound import stocks_found
 from auth_middleware import token_required
-from api.memeforge import meme_forge_api
-from model.memeforge_database import initMeme
 #from flask_cors import CORS
 #from flask import Flask
 
@@ -121,7 +119,7 @@ def save_settings():
 @app.before_request
 def before_request():
     allowed_origin = request.headers.get('Origin')
-    if allowed_origin in ['http://localhost:4100', 'http://127.0.0.1:4100', 'http://127.0.0.1:8476' 'https://tuckergol.github.io/frontgang/']:
+    if allowed_origin in ['http://localhost:4100', 'http://127.0.0.1:4100', 'http://127.0.0.1:8476', 'https://tuckergol.github.io/frontgang/']:
         cors._origins = allowed_origin
 
 # Create an AppGroup for custom commands
@@ -136,7 +134,6 @@ def generate_data():
     initfood()
     initbakery()
     initstock()
-    #initTheme()
 
 
 # Register the custom command group with the Flask application
