@@ -5,6 +5,7 @@ import base64
 from model.users import User
 from werkzeug.security import check_password_hash
 from __init__ import db
+from auth_middleware import token_required
 
 # Setting up Blueprint for settings API
 settings_api = Blueprint('settings_api', __name__, url_prefix='/api/settings')
@@ -85,9 +86,42 @@ class GetProfilePicture(Resource):
 
         if user and user._pfp:
             return {'pfp': user._pfp}, 200
+        
+class UpdateFavoriteFood(Resource):
+    def put(self):
+        body = request.get_json()
+        user_uid = body.get('uid')
+        new_favorite_food = body.get('favorite_food')
+
+        if not all([user_uid, new_favorite_food]):
+            return {'message': 'All fields are required'}, 400
+
+        user = User.query.filter_by(_uid=user_uid).first()
+        if user:
+            user._favoritefood = new_favorite_food
+            db.session.commit()
+            return {'message': 'Favorite food updated successfully'}, 200
+        else:
+            return {'message': 'User not found'}, 404
+        
+class GetFavoriteFood(Resource):
+    def get(self):
+        user_uid = request.args.get('uid')
+        
+        if not user_uid:
+            return {'message': 'UID required. Please sign in.'}, 400
+        
+        user = User.query.filter_by(_uid=user_uid).first()
+        
+        if user:
+            return {'favorite_food': user._favoritefood}, 200
+        else:
+            return {'message': 'User not found'}, 404
 
 # Register API resources with routes
 api.add_resource(ChangeUsername, '/change-name')
 api.add_resource(UploadProfilePicture, '/profile-picture')
 api.add_resource(GetUsername, '/get-user-name')
 api.add_resource(GetProfilePicture, '/get-profile-picture')
+api.add_resource(UpdateFavoriteFood, '/update-favorite-food')
+api.add_resource(GetFavoriteFood, '/get-favorite-food')
