@@ -10,9 +10,8 @@ from sqlalchemy import func, case, select
 import sqlite3
 from __init__ import app, db, cors, dbURI
 import requests
-import matplotlib.pyplot as plt
-from io import BytesIO
-import base64
+
+
 
 
 
@@ -670,72 +669,6 @@ class StocksAPI(Resource):
                 return {'message': 'Stock sold successfully'}, 200
             else:
                 return {'message': 'Insufficient stock quantity to sell'}, 400
-    class _Graph1(Resource):
-        def post(self):
-            body = request.get_json()
-            uid= body.get('uid')
-            user_transactions = Stock_Transactions.query.filter_by(_uid=uid).all()
-            # Generate user's money over transactions data
-            user_money_over_transactions = [10000]  # Starting money for each user
-            for transaction in user_transactions:
-                user_money_over_transactions.append(user_money_over_transactions[-1] + transaction._transaction_amount)
-            # Generate and save the line graph
-            plt.plot(user_money_over_transactions)
-            plt.title(f"User's Money Over Transactions (UID: {uid})")
-            plt.xlabel("Transaction Number")
-            plt.ylabel("User's Money")
-            ##plt.savefig(f"user_money_graph_{uid}.png")  # Save the graph as an image file
-            plt.grid(True)
-            plt.tight_layout()
-                # Save it to a BytesIO object
-            buf = BytesIO()
-            plt.savefig(buf, format='png')
-            buf.seek(0)
-            # Convert plot to a base64 string
-            image_base64 = base64.b64encode(buf.read()).decode('utf-8')
-            buf.close()
-            print(image_base64)
-            return jsonify({'image': image_base64})
-        
-    class _Graph(Resource):
-        def post(self):
-            body = request.get_json()
-            uid = body.get('uid')
-            user_transactions = Stock_Transactions.query.filter_by(_uid=uid).all()
-            print("this is user transaction:")
-            print(user_transactions)
-
-            user_money_over_transactions = [10000]  # Starting money for each user
-
-            for transaction in user_transactions:
-                if transaction._transaction_type == 'buy':
-                    user_money_over_transactions.append(user_money_over_transactions[-1] - transaction._transaction_amount)
-                elif transaction._transaction_type == 'sell':
-                    user_money_over_transactions.append(user_money_over_transactions[-1] + transaction._transaction_amount)
-
-            # Debug prints
-            print("User Transactions:", user_transactions)
-            print("Money Over Transactions:", user_money_over_transactions)
-
-            # Generate and save the line graph
-            plt.plot(user_money_over_transactions)
-            plt.title(f"User's Money Over Transactions (UID: {uid})")
-            plt.xlabel("Transaction Number")
-            plt.ylabel("User's Money")
-            plt.grid(True)
-            ##plt.tight_layout()
-
-            # Save it to a BytesIO object
-            buf = BytesIO()
-            plt.savefig(buf, format='png')
-            buf.seek(0)
-
-            # Convert plot to a base64 string
-            image_base64 = base64.b64encode(buf.read()).decode('utf-8')
-            buf.close()
-
-            print(image_base64)
-            return jsonify({'image': image_base64})
     class _Owned(Resource):
         def post(self):
             body = request.get_json()
@@ -791,7 +724,6 @@ class StocksAPI(Resource):
     api.add_resource(_Stockmoney, '/stockmoney')
     api.add_resource(_Portfolio2, '/portfolio')
     api.add_resource(_SellStock, '/sell')
-    api.add_resource(_Graph, '/graph')
     api.add_resource(_Owned, '/owned')
     api.add_resource(_Sortdisplay, '/sortdisplay')
     api.add_resource(_Singleupdata, '/singleupdate')
