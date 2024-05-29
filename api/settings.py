@@ -60,43 +60,57 @@ class UploadProfilePicture(Resource):
 
 class GetUsername(Resource):
     def get(self):
+        # Get UID from request arguments
         user_uid = request.args.get('uid')
         
+        # Check if UID exists
         if not user_uid:
             return {'message': 'UID required. Please sign in.'}, 400
         
+        # Query database for user by UID
         user = User.query.filter_by(_uid=user_uid).first()
         
+        # If user exists, return user data
         if user:
             user_data = {
                 'name': user._name,
             }
             return user_data, 200
         else:
+            # If user not found, return error message
             return {'message': 'User not found'}, 404
         
 class GetProfilePicture(Resource):
     def get(self):
+        # Get UID from request arguments
         user_uid = request.args.get('uid')
 
+        # Check if UID exists
         if not user_uid:
             return {'message': 'UID is required. Please sign in.'}, 400
 
+        # Query database for user by UID
         user = User.query.filter_by(_uid=user_uid).first()
 
+        # If user exists and has profile picture, return profile picture data
         if user and user._pfp:
             return {'pfp': user._pfp}, 200
         
 class UpdateFavoriteFood(Resource):
     def put(self):
+        # Get JSON body from request
         body = request.get_json()
+        # Extract UID and new favorite food from body
         user_uid = body.get('uid')
         new_favorite_food = body.get('favorite_food')
 
+        # Check if both UID and new favorite food are provided
         if not all([user_uid, new_favorite_food]):
             return {'message': 'All fields are required'}, 400
 
+        # Query database for user by UID
         user = User.query.filter_by(_uid=user_uid).first()
+        # If user exists, update favorite food and commit changes to database
         if user:
             user._favoritefood = new_favorite_food
             db.session.commit()
@@ -106,16 +120,21 @@ class UpdateFavoriteFood(Resource):
         
 class GetFavoriteFood(Resource):
     def get(self):
+        # Get UID from request arguments
         user_uid = request.args.get('uid')
         
+        # Check if UID exists
         if not user_uid:
             return {'message': 'UID required. Please sign in.'}, 400
         
+        # Query database for user by UID
         user = User.query.filter_by(_uid=user_uid).first()
         
+        # If user exists, return the favorite food
         if user:
             return {'favorite_food': user._favoritefood}, 200
         else:
+            # If user not found, return error message
             return {'message': 'User not found'}, 404
 
 # Register API resources with routes
