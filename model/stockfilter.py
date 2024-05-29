@@ -121,6 +121,19 @@ class Stocksort:
         num = int(payload_df['GICS Sector'])
         initialbucket = self._sort()
         sortedate = initialbucket[num]
+        print("this is sortedate:" + str(sortedate[1][0]))
+        n=len(sortedate)
+        for i in range(n - 1):
+            swapped = False
+            for j in range(0, n - i - 1):
+                if sortedate[j][0] > sortedate[j + 1][0]:
+                    sortedate[j], sortedate[j + 1] = sortedate[j + 1], sortedate[j]
+                    swapped = True
+            if not swapped:
+                break
+            print(str(sortedate))
+        
+        
         return sortedate
     def _sort(self):
         result_list = self._clean()  # Corrected the method call
