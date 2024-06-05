@@ -70,3 +70,14 @@
     - image: Text field to store the painting data
     - code to initialize the Painting table in the database
 
+### House Price Prediction Project
+---
+- Created by Deva Sasikumar
+- Files used in this project:
+  - [api/house_price.py](api/house_price.py):
+    - Contains API endpoint code for predicting house prices.
+    - Utilizes Flask and Flask-RESTful for handling HTTP requests.
+    - Implements a Linear Regression model trained on a dataset stored in 'house_prices.csv'.
+    - Provides endpoints for preprocessing inputs, making predictions, and handling errors.
+
+
