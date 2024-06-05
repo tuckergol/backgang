@@ -25,4 +25,22 @@
   - model/stockfileter.py:
       - code to clean CSV file containing all stocks from S&P 500
       - code to clean json responce to match clean csv data
-      - code to bucket sort and code to sort stocks alphebetically   
+      - code to bucket sort and code to sort stocks alphebetically
+   
+    
+###  Painter Project 
+---
+- Created by Deva Sasikumar ( devaSas1 )
+- Files used in this project: api/paint_api.py, model/painting.py
+- api/paint_api.py:
+    - contains API endpoint code to:
+    - upload painting data and associate it with a user
+    - display all paintings stored in the database along with the associated usernames
+- model/painting.py:
+    - defines the Painting model with attributes for image data and user association
+    - contains the Painting class, which represents the Painting table in the database
+    - userID: Foreign key linking the painting to a user
+    - id: Primary key for identifying each painting uniquely
+    - image: Text field to store the painting data
+    - code to initialize the Painting table in the database
+
