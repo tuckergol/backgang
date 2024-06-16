@@ -6,6 +6,19 @@
   - This is the backend for the project. The frontend README contains information regarding crediting and additional context.
 - Template for the project was a teacher-provided flask porfolio containing many starter files to aid in building the base system(s) of backend functionality (ex: main.py).
 
+### Food prediction Ml project:
+---
+- Files used in this project: model/foods.py, api/food.py
+- model/foods.py:
+    - creates an instance and cleans CSV file
+    - defines columns used for prediction and  column that is being predicted
+    - Cleans JSON input from frontend
+    - trains logistic regression model and decision tree model.
+- api/food.py:
+    - calls model  
+    - recieves JSON from frontend
+    - sends JSON input from frontend to model for prediction
+    - returns predicted data to frontend
 ###  Stock Project 
 ---
 - Created by Varun Manoj Pillai ( varunm532 )
